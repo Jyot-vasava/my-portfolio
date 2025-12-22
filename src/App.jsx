@@ -314,9 +314,9 @@ const Portfolio = () => {
                         JV
                       </div>
                       <p className="text-sm text-gray-400">
-                        Add your photo as
+                        jyot vasava
                         <br />
-                        /public/profile.jpg
+                        
                       </p>
                     </div>
                   </div>
