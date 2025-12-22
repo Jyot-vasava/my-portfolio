@@ -96,5 +96,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Backend server running on http://localhost:${PORT}`);
+  console.log(
+    `🚀 Backend server running on https://my-portfolio-email-service.onrender.com`
+  );
 });
