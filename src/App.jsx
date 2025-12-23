@@ -280,7 +280,7 @@ const Portfolio = () => {
                   My Works <ArrowDown size={20} />
                 </button>
                 <a
-                  href="../public/Jyot_Vasava_Resume.pdf"
+                  href="/Jyot_Vasava_Resume.pdf"
                   className="flex items-center gap-2 px-8 py-4 border-2 border-gray-700 hover:border-yellow-500 rounded transition-all transform hover:scale-105"
                 >
                   <Download size={20} /> Download Resume
