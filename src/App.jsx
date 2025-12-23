@@ -296,7 +296,7 @@ const Portfolio = () => {
                 <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-yellow-500/30 shadow-2xl shadow-red-500/20">
                   {/* Replace the src with your image path */}
                   <img
-                    src="../public/profile.JPG"
+                    src="../dist/profile.JPG"
                     alt="Jyot Vasava"
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -316,7 +316,6 @@ const Portfolio = () => {
                       <p className="text-sm text-gray-400">
                         jyot vasava
                         <br />
-                        
                       </p>
                     </div>
                   </div>
@@ -525,7 +524,8 @@ const Portfolio = () => {
               Featured <span className="text-yellow-500">Projects</span>
             </h2>
             <p className="text-gray-400">
-              Showcasing my journey in building full-stack applications and other projects
+              Showcasing my journey in building full-stack applications and
+              other projects
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
