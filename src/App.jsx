@@ -32,6 +32,8 @@ const Portfolio = () => {
   const [formStatus, setFormStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Replace your handleSubmit function in App.jsx with this:
+
   const handleSubmit = async () => {
     if (
       !formData.name ||
@@ -44,24 +46,35 @@ const Portfolio = () => {
     }
 
     setIsSubmitting(true);
-    setFormStatus({ type: "", message: "" });
+    setFormStatus({
+      type: "info",
+      message:
+        "Waking up server... This may take 30-60 seconds on first request.",
+    });
 
     try {
+      // Increased timeout to 90 seconds for Render cold starts
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 90000);
+
       const response = await fetch(
         "https://my-portfolio-email-service.onrender.com/api/send-email",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
+          signal: controller.signal,
         }
       );
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
       if (response.ok) {
         setFormStatus({
           type: "success",
-          message: "Message sent successfully!",
+          message: "Message sent successfully! I'll get back to you soon.",
         });
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
@@ -71,11 +84,20 @@ const Portfolio = () => {
         });
       }
     } catch (error) {
-      setFormStatus({
-        type: "error",
-        message:
-          "An error occurred. Please try emailing directly at vasavajyotkumar@gmail.com",
-      });
+      if (error.name === "AbortError") {
+        setFormStatus({
+          type: "error",
+          message:
+            "Request timed out. The server might be waking up. Please try again in a moment, or email me directly at vasavajyotkumar@gmail.com",
+        });
+      } else {
+        setFormStatus({
+          type: "error",
+          message:
+            "Network error. Please try again or email me directly at vasavajyotkumar@gmail.com",
+        });
+      }
+      console.error("Error:", error);
     } finally {
       setIsSubmitting(false);
     }

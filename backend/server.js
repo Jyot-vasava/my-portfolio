@@ -12,11 +12,18 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Request timeout middleware
+app.use((req, res, next) => {
+  req.setTimeout(80000); // 80 seconds
+  res.setTimeout(80000);
+  next();
+});
+
 // Create transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT),
-  secure: process.env.SMTP_PORT === "465", // true for 465, false for other ports
+  secure: process.env.SMTP_PORT === "465",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -35,19 +42,42 @@ transporter.verify((error, success) => {
   }
 });
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    status: "Server is running",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
+// Ping endpoint to keep server warm
+app.get("/api/ping", (req, res) => {
+  res.json({ status: "alive", timestamp: new Date().toISOString() });
+});
+
 // Email sending endpoint
 app.post("/api/send-email", async (req, res) => {
+  console.log("📧 Email request received:", new Date().toISOString());
+
   const { name, email, subject, message } = req.body;
 
   // Validation
   if (!name || !email || !subject || !message) {
+    console.log("❌ Validation failed: Missing fields");
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  // Email options
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    console.log("❌ Invalid email format");
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
   const mailOptions = {
     from: `"Portfolio Contact" <${process.env.SMTP_USER}>`,
-    to: process.env.RECIPIENT_EMAIL, // Your email where you want to receive messages
+    to: process.env.RECIPIENT_EMAIL,
     replyTo: email,
     subject: `Portfolio Contact: ${subject}`,
     html: `
@@ -76,27 +106,35 @@ app.post("/api/send-email", async (req, res) => {
   };
 
   try {
+    console.log("📤 Attempting to send email...");
     await transporter.sendMail(mailOptions);
     console.log("✅ Email sent successfully to:", process.env.RECIPIENT_EMAIL);
-    res.status(200).json({ message: "Email sent successfully" });
+    res.status(200).json({
+      message: "Email sent successfully",
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
     console.error("❌ Error sending email:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to send email", details: error.message });
+    res.status(500).json({
+      error: "Failed to send email",
+      details: error.message,
+      timestamp: new Date().toISOString(),
+    });
   }
 });
 
-// Health check endpoint
-app.get("/", (req, res) => {
-  res.json({
-    status: "Server is running",
-    timestamp: new Date().toISOString(),
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res.status(500).json({
+    error: "Internal server error",
+    message: err.message,
   });
 });
 
 app.listen(PORT, () => {
-  console.log(
-    `🚀 Backend server running on https://my-portfolio-email-service.onrender.com`
-  );
+  console.log(`🚀 Backend server running on port ${PORT}`);
+  console.log(`📧 SMTP Host: ${process.env.SMTP_HOST}`);
+  console.log(`📧 SMTP Port: ${process.env.SMTP_PORT}`);
+  console.log(`📬 Recipient: ${process.env.RECIPIENT_EMAIL}`);
 });
