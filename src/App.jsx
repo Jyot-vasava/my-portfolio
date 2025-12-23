@@ -139,13 +139,13 @@ const Portfolio = () => {
     const projects = [
       {
         title: "Industrial Device Monitoring Dashboard",
-        desc: "A comprehensive monitoring dashboard for industrial devices with real-time data visualization, device status tracking, and performance analytics. Features intuitive charts and graphs for operational insights.",
+        desc: " Developed real-time dashboard processing live sensor data streams (1 point/sec) from industrial equipment via Server-Sent Events.",
         features: [
           "Real-time Monitoring",
           "Data Visualization",
           "Device Analytics",
         ],
-        tech: ["React", "Tailwind CSS", "Chart.js", "JavaScript"],
+        tech: ["React", "Tailwind CSS", "uPlot", "JavaScript"],
         gradient: "from-green-900/40 to-emerald-900/40",
         github: "https://github.com/Jyot-vasava/limelight-dashboard",
       },
