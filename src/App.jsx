@@ -136,47 +136,63 @@ const Portfolio = () => {
     }
   };
 
-  const projects = [
-    {
-      title: "EstateNetwork",
-      desc: "A full-stack real estate platform for browsing, searching, and filtering properties. Features JWT authentication, REST APIs, image uploads via Cloudinary, email with Nodemailer.",
-      features: ["Property Listings", "JWT Auth", "Image Uploads"],
-      tech: [
-        "React",
-        "Node.js",
-        "Express.js",
-        "MongoDB",
-        "Redux",
-        "Tailwind CSS",
-        "Cloudinary",
-      ],
-      gradient: "from-yellow-900/40 to-orange-900/40",
-      github: "https://github.com/Jyot-vasava/EstateNetwork",
-    },
-    {
-      title: "PlayBox",
-      desc: "An OTT content aggregator with tier-based subscription plans. Includes user and admin dashboards to manage content, users, analytics, reviews, and activity tracking.",
-      features: ["Subscription Tiers", "Admin Dashboard", "Content Management"],
-      tech: [
-        "React",
-        "Node.js",
-        "Express.js",
-        "MongoDB",
-        "Redux",
-        "Tailwind CSS",
-      ],
-      gradient: "from-purple-900/40 to-pink-900/40",
-      github: "https://github.com/Jyot-vasava/PlayBox",
-    },
-    {
-      title: "OTT Platform Database Design",
-      desc: "A normalized relational database design for an OTT platform with ER diagrams, DDL scripts, and complex SQL queries ensuring data consistency.",
-      features: ["ER Diagrams", "Normalization", "Complex Queries"],
-      tech: ["PostgreSQL", "SQL", "draw.io"],
-      gradient: "from-blue-900/40 to-cyan-900/40",
-      github: "https://github.com/Jyot-vasava/OTT-Database-Design",
-    },
-  ];
+    const projects = [
+      {
+        title: "Industrial Device Monitoring Dashboard",
+        desc: "A comprehensive monitoring dashboard for industrial devices with real-time data visualization, device status tracking, and performance analytics. Features intuitive charts and graphs for operational insights.",
+        features: [
+          "Real-time Monitoring",
+          "Data Visualization",
+          "Device Analytics",
+        ],
+        tech: ["React", "Tailwind CSS", "Chart.js", "JavaScript"],
+        gradient: "from-green-900/40 to-emerald-900/40",
+        github: "https://github.com/Jyot-vasava/limelight-dashboard",
+      },
+      {
+        title: "EstateNetwork",
+        desc: "A full-stack real estate platform for browsing, searching, and filtering properties. Features JWT authentication, REST APIs, image uploads via Cloudinary, email with Nodemailer.",
+        features: ["Property Listings", "JWT Auth", "Image Uploads"],
+        tech: [
+          "React",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "Redux",
+          "Tailwind CSS",
+          "Cloudinary",
+        ],
+        gradient: "from-yellow-900/40 to-orange-900/40",
+        github: "https://github.com/Jyot-vasava/EstateNetwork",
+      },
+      {
+        title: "PlayBox",
+        desc: "An OTT content aggregator with tier-based subscription plans. Includes user and admin dashboards to manage content, users, analytics, reviews, and activity tracking.",
+        features: [
+          "Subscription Tiers",
+          "Admin Dashboard",
+          "Content Management",
+        ],
+        tech: [
+          "React",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "Redux",
+          "Tailwind CSS",
+        ],
+        gradient: "from-purple-900/40 to-pink-900/40",
+        github: "https://github.com/Jyot-vasava/PlayBox",
+      },
+      {
+        title: "OTT Platform Database Design",
+        desc: "A normalized relational database design for an OTT platform with ER diagrams, DDL scripts, and complex SQL queries ensuring data consistency.",
+        features: ["ER Diagrams", "Normalization", "Complex Queries"],
+        tech: ["PostgreSQL", "SQL", "draw.io"],
+        gradient: "from-blue-900/40 to-cyan-900/40",
+        github: "https://github.com/Jyot-vasava/OTT-Database-Design",
+      },
+    ];
 
   return (
     <div className="bg-black text-gray-100 min-h-screen">
