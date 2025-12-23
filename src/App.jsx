@@ -58,7 +58,7 @@ const Portfolio = () => {
       const timeoutId = setTimeout(() => controller.abort(), 90000);
 
       const response = await fetch(
-        "https://my-portfolio-email-service.onrender.com/api/send-email",
+        "../api/send-email.js",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
