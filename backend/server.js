@@ -3,13 +3,25 @@ import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// Middleware - CORS Configuration
+const corsOptions = {
+  origin: [
+    "https://jyot-vasava.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Request timeout middleware
@@ -19,28 +31,38 @@ app.use((req, res, next) => {
   next();
 });
 
-// Create transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
-  secure: process.env.SMTP_PORT === "465",
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+// Create transporter with better error handling
+let transporter;
+try {
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT),
+    secure: process.env.SMTP_PORT === "465",
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  console.log("📧 Transporter created successfully");
+} catch (error) {
+  console.error("❌ Failed to create transporter:", error);
+}
 
 // Verify transporter configuration
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("❌ Email transporter error:", error);
-  } else {
-    console.log("✅ Server is ready to send emails");
-  }
-});
+if (transporter) {
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log("❌ Email transporter error:", error.message);
+    } else {
+      console.log("✅ Server is ready to send emails");
+    }
+  });
+} else {
+  console.error("❌ Transporter not initialized - check environment variables");
+}
 
 // Health check endpoint
 app.get("/", (req, res) => {
@@ -56,11 +78,21 @@ app.get("/api/ping", (req, res) => {
   res.json({ status: "alive", timestamp: new Date().toISOString() });
 });
 
-// Email sending endpoint
+// Email sending endpoint with better error handling
 app.post("/api/send-email", async (req, res) => {
   console.log("📧 Email request received:", new Date().toISOString());
+  console.log("📍 Request origin:", req.headers.origin);
 
   const { name, email, subject, message } = req.body;
+
+  // Check if transporter exists
+  if (!transporter) {
+    console.error("❌ Transporter not configured");
+    return res.status(500).json({
+      error: "Email service not configured properly",
+      details: "SMTP settings missing",
+    });
+  }
 
   // Validation
   if (!name || !email || !subject || !message) {
@@ -132,9 +164,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Backend server running on port ${PORT}`);
-  console.log(`📧 SMTP Host: ${process.env.SMTP_HOST}`);
-  console.log(`📧 SMTP Port: ${process.env.SMTP_PORT}`);
-  console.log(`📬 Recipient: ${process.env.RECIPIENT_EMAIL}`);
+  console.log(`📧 SMTP Host: ${process.env.SMTP_HOST || "NOT SET"}`);
+  console.log(`📧 SMTP Port: ${process.env.SMTP_PORT || "NOT SET"}`);
+  console.log(`📬 Recipient: ${process.env.RECIPIENT_EMAIL || "NOT SET"}`);
+  console.log(`🌐 CORS enabled for: https://jyot-vasava.vercel.app`);
 });
