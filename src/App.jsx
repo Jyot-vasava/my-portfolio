@@ -400,7 +400,7 @@ const Portfolio = () => {
                   "React.js",
                   "Node.js",
                   "MongoDB",
-                  "TypeScript",
+                  "JavaScript",
                   "PostgreSQL",
                 ].map((s) => (
                   <span
